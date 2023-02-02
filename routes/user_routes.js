@@ -22,7 +22,6 @@ router.get('/:id', async (req, res) => {
 })
 
 // Create user
-
 router.post('/', async (req, res) => {
     try {
         const { name, email, company, password, isEmployer } = req.body
@@ -36,7 +35,6 @@ router.post('/', async (req, res) => {
 })
 
 // Update user
-
 router.put('/:id', async (req, res) => {
     const { name, email, company, password, isEmployer } = req.body
     const newUser = { name, email, company, password, isEmployer }
@@ -55,21 +53,17 @@ router.put('/:id', async (req, res) => {
 })
 
 // Delete user
-
 router.delete('/:id', async (req, res) => {
     try{
         const user = await UserModel.findByIdAndDelete(req.params.id)
         if (user) {
-            // res.send(204).send({ message: 'Job listing deleted successfully!'})
-            res.sendStatus(204)
-        // } else {
-            // res.sendStatus(404).send({ error: 'Job listing not found!' })
+            res.status(204)
         } else {
-            res.sendStatus(404).send({ error: 'User not found!' }) // not working for some reason - check later
+            res.status(404).send({ error: 'User not found!' })
         }
     }
     catch (err) {
-        res.sendStatus(500).send({ error: err.message})
+        res.status(500).send({ error: err.message})
     }
 })
 

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import AccessControl from 'accesscontrol'
 import { UserModel } from '../models/user.js'
+import { ListingModel } from '../models/listing.js'
 
 dotenv.config()
 
@@ -41,14 +42,15 @@ const secret = process.env.JWT_SECRET_KEY
 export const authenticate = async (req, res, next) => {
     try {
         let authHeader = req.headers["authorization"]
+        if (authHeader === undefined) {
+            return res.status(401).send({ error: 'You do not have permission to perform this action.'})
+        }
         if (authHeader.startsWith('Bearer ')) {
             const accessToken = authHeader.substring(6).trim()
             const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET_KEY)
             req.user = verifiedToken
-            console.log(req.user)
+            // console.log(req.user)
             next()
-        } else {
-            return res.status(401).send({ error: 'You do not have permission to perform this action.'})
         }
     } catch (err) {
         return res.status(401).send({ error: err.message })
@@ -57,8 +59,7 @@ export const authenticate = async (req, res, next) => {
 
 export const authorizeEmployer = async (req, res, next) => {
     const user = await UserModel.findById(req.user.id)
-    console.log(user)
-    console.log(user.isEmployer)
+    // console.log(user)
     if (user.isEmployer) {
         next()
     } else {
@@ -66,6 +67,11 @@ export const authorizeEmployer = async (req, res, next) => {
     }
 }
 
-export const authorizeEmployerOwner = async (req, res, next) => {
-    
+export const authorizeListingOwner = async (req, res, next) => {
+    const listing = await ListingModel.findById(req.params.id).populate({path: 'company', select: 'company'})
+    if (listing.company.id != req.user.id) {
+        return res.status(401).send({ error: 'Only the owner of this listing can perform this action.'})
+    } else {
+        next()
+    }
 }

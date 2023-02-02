@@ -2,7 +2,6 @@ import express from 'express'
 import dotenv from 'dotenv'
 import crypto from 'crypto'
 import bcrypt from 'bcrypt'
-import { appendFile } from 'fs'
 import { UserModel } from '../models/user.js'
 import jwt from 'jsonwebtoken'
 
@@ -38,8 +37,8 @@ const router = express.Router()
 router.post('/register', async (req, res) => {
     try {
         const { email, password, name, company, isEmployer } = req.body
-        if (!(email && password)) {
-            res.status(400).send({ error: 'Please enter an email address and password.' })
+        if (!(email && password) || isEmployer && !company || !isEmployer && !name) {
+            return res.status(400).send({ error: 'Please enter all required fields.' })
         }
         const existingUser = await UserModel.findOne({ email })
         if (existingUser) {

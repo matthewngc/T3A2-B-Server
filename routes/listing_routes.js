@@ -17,12 +17,12 @@ router.post('/', async (req, res) => {
 })
 
 // READ: Get all job listings
-router.get('/', async (req, res) => res.send(await ListingModel.find().populate()))
+router.get('/', async (req, res) => res.send(await ListingModel.find().populate({path: 'company', select: 'company'})))
 
 // READ: Get one job listing by ID
 router.get('/:id', async (req, res) => {
     try {
-        const listing = await ListingModel.findById(req.params.id).populate()
+        const listing = await ListingModel.findById(req.params.id).populate({path: 'company', select: 'company'})
         if (listing) {
             res.send(listing)
         } else {
@@ -58,15 +58,15 @@ router.delete('/:id', async (req, res) => {
         const listing = await ListingModel.findByIdAndDelete(req.params.id)
         if (listing) {
             // res.send(204).send({ message: 'Job listing deleted successfully!'})
-            res.sendStatus(204)
+            res.status(204)
         // } else {
             // res.sendStatus(404).send({ error: 'Job listing not found!' })
         } else {
-            res.sendStatus(404).send({ error: 'Job listing not found!' }) // not working for some reason - check later
+            res.status(404).send({ error: 'Job listing not found!' }) // not working for some reason - check later
         }
     }
     catch (err) {
-        res.sendStatus(500).send({ error: err.message})
+        res.status(500).send({ error: err.message})
     }
 })
 

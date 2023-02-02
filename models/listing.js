@@ -11,8 +11,8 @@ const listingSchema = new mongoose.Schema({
         required: true 
     },
     company: { 
-        type: String, 
-        required: true 
+        type: mongoose.ObjectId, 
+        ref: 'User' 
     },
     education: { 
         type: String, 

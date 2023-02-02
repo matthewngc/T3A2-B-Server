@@ -1,11 +1,13 @@
 import express from 'express'
 import { ListingModel } from '../models/listing.js'
+import { authenticate, authorizeEmployer } from '../middleware/authorization.js'
 
 const router = express.Router()
 
 // CREATE: Post job listing
-router.post('/', async (req, res) => {
+router.post('/', authenticate, authorizeEmployer, async (req, res) => {
     try {
+
         const { title, description, company, education, experience } = req.body
         const newJobListing = { title, description, company, education, experience }
         const insertedListing = await ListingModel.create(newJobListing)

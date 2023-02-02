@@ -18,26 +18,30 @@ const users = [
         name: 'John Smith',
         email: 'johnsmith@abc.com',
         password: 'abc123',
-        isEmployer: false
+        isEmployer: false,
+        // role: 'jobseeker'
     },
     {
         company: 'XYZ Ltd',
         email: 'xyz@xyz.com',
         password: 'xyz123',
-        isEmployer: true
+        isEmployer: true,
+        // role: 'employer'
     },
     {
         name: 'Andrew Smith',
         email: 'andrewsmith@abc.com',
         company: 'ABC Pty Ltd',
         password: 'password123',
-        isEmployer: true
+        isEmployer: true,
+        // role: 'employer'
     },
     {
         name: 'James Johnson',
         email: 'jamesjohnson@abc.com',
         password: 'password123',
-        isEmployer: false
+        isEmployer: false,
+        // role:'jobseeker'
     }
 ]
 

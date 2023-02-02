@@ -1,5 +1,8 @@
 import express from "express"
 import listingRoutes from './routes/listing_routes.js'
+import { dbConnect } from './db.js'
+
+dbConnect()
 
 const app = express()
 const port = 4002

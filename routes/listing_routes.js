@@ -1,5 +1,5 @@
 import express from 'express'
-import { ListingModel } from '../db.js'
+import { ListingModel } from '../models/listing.js'
 
 const router = express.Router()
 

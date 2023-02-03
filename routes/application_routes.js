@@ -18,6 +18,8 @@ router.get('/', async (req, res) => {
     }
 })
 
+// READ: Get all applications that a jobseeker has applied for
+
 // READ: Get one application
 router.get('/:id', async (req, res) => {
     try {

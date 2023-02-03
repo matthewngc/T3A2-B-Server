@@ -20,6 +20,25 @@ router.post('/', authenticate, authorizeEmployer, async (req, res) => {
 // READ: Get all job listings
 router.get('/', async (req, res) => res.send(await ListingModel.find().populate({path: 'company', select: 'company'})))
 
+// READ: Get all job listings from logged in employer
+router.get('/dashboard', authenticate, async (req, res) => {
+    try {
+        console.log(res.locals.user)
+        if (!res.locals.user) {
+            return res.status(403).send({ error: 'Please login' })
+        }
+        if (res.locals.user.isEmployer) {
+        res.send(await ListingModel
+        .find( { company: res.locals.user})
+        .populate({ path: 'company', select: 'company' })
+    )} else {
+            return res.status(403).send({ error: 'Access denied - employers only.'})
+    }}
+    catch (err) {
+        return res.status(500).send({ error: err.message })
+    }
+})    
+
 // READ: Get one job listing by ID
 router.get('/:id', async (req, res) => {
     try {

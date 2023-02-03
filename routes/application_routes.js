@@ -1,5 +1,5 @@
 import express from 'express'
-import { authenticate, authorizeJobseeker, findListingOwner, authorizeApplicationOwner } from '../middleware/authorization.js'
+import { authenticate, authorizeJobseeker, findListingOwner, authorizeApplicationOwner, authorizeApplicationReviewer } from '../middleware/authorization.js'
 import { ApplicationModel } from '../models/application.js'
 
 const router = express.Router()
@@ -7,7 +7,7 @@ const router = express.Router()
 // CREATE: Create a new job application
 router.post('/', authenticate, authorizeJobseeker, findListingOwner, async (req, res) => {
     try {
-        const { listing } = req.body // make this autofill applicant from user token
+        const { listing } = req.body
         const newJobApplication = { 
             listing, 
             applicant: res.locals.user,
@@ -89,7 +89,23 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// UPDATE: Update application status
+router.put('/:id', authenticate, authorizeApplicationReviewer, async (req, res) => {
+    const { status } = req.body
+    const newApplication = { status }
 
+    try {
+        const application = await ApplicationModel.findByIdAndUpdate(req.params.id, newApplication, { returnDocument: 'after' })
+        if (application) {
+            res.send(application)
+        } else {
+            res.status(404).send({ error: 'Application not found!' })
+        }
+    }
+    catch (err) {
+        res.status(500).send({ error: err.message })
+    }
+})
 
 // DELETE: Delete a job application
 router.delete('/:id', authenticate, authorizeApplicationOwner, async (req, res) => {

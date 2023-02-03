@@ -68,6 +68,20 @@ export const authorizeApplicationOwner = async (req, res, next) => {
     }
 }
 
+export const authorizeApplicationReviewer = async (req, res, next) => {
+    const application = await ApplicationModel.findById(req.params.id)
+    if (!application) {
+        return res.status(404).send({ error: 'No application found under this ID.'})
+    }
+    const companyID = application.company._id.valueOf()
+    const userID = res.locals.user._id.valueOf()
+    if (companyID != userID) {
+        return res.status(403).send({ error: 'Only the company that posted the listing can perform this action.' })
+    } else {
+        next()
+    }
+}
+
 export const authorizeJobseeker = async (req, res, next) => {
     try {
         if (!res.locals.user.isEmployer) {

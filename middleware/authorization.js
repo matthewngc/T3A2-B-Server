@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import AccessControl from 'accesscontrol'
 import { UserModel } from '../models/user.js'
 import { ListingModel } from '../models/listing.js'
 
 dotenv.config()
 
-const secret = process.env.JWT_SECRET_KEY
+// const secret = process.env.JWT_SECRET_KEY
 
 // export function authorize(employer) {
 //     return [
@@ -68,10 +67,17 @@ export const authorizeEmployer = async (req, res, next) => {
 }
 
 export const authorizeListingOwner = async (req, res, next) => {
+    try{
     const listing = await ListingModel.findById(req.params.id).populate({path: 'company', select: 'company'})
+    if (!listing) {
+        return res.status(404).send({ error: 'No listing found under this ID.'})
+    }
     if (listing.company.id != req.user.id) {
         return res.status(401).send({ error: 'Only the owner of this listing can perform this action.'})
     } else {
         next()
     }
+}   catch (err) {
+    return res.status(500).send({ error: err.message })
+}
 }

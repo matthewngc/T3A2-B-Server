@@ -1,28 +1,12 @@
 import express from 'express'
+import { createApplication } from '../controllers/application_controller.js'
 import { authenticate, authorizeJobseeker, findListingOwner, authorizeApplicationOwner, authorizeApplicationReviewer } from '../middleware/authorization.js'
 import { ApplicationModel } from '../models/application.js'
 
 const router = express.Router()
 
 // CREATE: Create a new job application
-router.post('/', authenticate, authorizeJobseeker, findListingOwner, async (req, res) => {
-    try {
-        const { listing } = req.body
-        const newJobApplication = { 
-            listing, 
-            applicant: res.locals.user,
-            company: res.locals.company }
-        const insertedApplication = await ApplicationModel.create(newJobApplication)
-        return res.status(201).send(await insertedApplication
-            .populate([
-                { path: 'applicant', select: ['name', 'email'] },
-                { path: 'listing', select: 'title' },
-                { path: 'company', select: 'company' }])
-)}
-    catch (err) {
-        res.status(500).send({ error: err.message })
-    }
-})
+router.post('/', authenticate, authorizeJobseeker, findListingOwner, createApplication)
 
 // READ: Get all applications
 router.get('/', async (req, res) => {

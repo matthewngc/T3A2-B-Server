@@ -80,7 +80,8 @@ router.post('/login', async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                token: newToken            
+                token: newToken,
+                isEmployer: user.isEmployer            
         })
         } else {
             res.status(400).send( {error: 'Incorrect email or password.' })

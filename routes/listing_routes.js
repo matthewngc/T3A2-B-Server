@@ -7,8 +7,8 @@ const router = express.Router()
 // CREATE: Post job listing
 router.post('/', authenticate, authorizeEmployer, async (req, res) => {
     try {
-        const { title, description, education, experience } = req.body
-        const newJobListing = { title, description, company: res.locals.user.id, education, experience }
+        const { title, description, location, education, experience } = req.body
+        const newJobListing = { title, description, company: res.locals.user.id, location, education, experience }
         const insertedListing = await ListingModel.create(newJobListing)
         res.status(201).send(await insertedListing.populate({ path: 'company', select: 'company'}))
     }
@@ -57,8 +57,8 @@ router.get('/:id', async (req, res) => {
 
 // UPDATE: update job listing
 router.put('/:id', authenticate, authorizeListingOwner, async (req, res) => {
-    const { title, description, education, experience } = req.body
-    const newJobListing = { title, description, education, experience }
+    const { title, description, location, education, experience } = req.body
+    const newJobListing = { title, description, location, education, experience }
 
     try {
         const listing = await ListingModel.findByIdAndUpdate(req.params.id, newJobListing, { returnDocument: 'after' }).populate({ path: 'company', select: 'company'})

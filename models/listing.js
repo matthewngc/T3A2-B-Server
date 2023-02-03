@@ -14,6 +14,10 @@ const listingSchema = new mongoose.Schema({
         type: mongoose.ObjectId, 
         ref: 'User' 
     },
+    location: {
+        type: String,
+        required: true
+    },
     education: { 
         type: String, 
         required: true 

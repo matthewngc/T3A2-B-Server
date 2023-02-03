@@ -51,7 +51,32 @@ const users = [
         password: await bcrypt.hash('password123', 10),
         isEmployer: false,
         // role:'jobseeker'
-    }
+    },
+    {
+        company: 'McDonalds',
+        email: 'mcdonalds@abc.com',
+        debugPW: 'maccas123',
+        password: await bcrypt.hash('password123', 10),
+        isEmployer: true,
+        // role:'jobseeker'
+    },
+    {
+        company: 'Riot Games',
+        email: 'riot@abc.com',
+        debugPW: 'password123',
+        password: await bcrypt.hash('password123', 10),
+        isEmployer: true,
+        // role:'jobseeker'
+    },
+    {
+        company: 'Amazon',
+        email: 'amazon@abc.com',
+        debugPW: 'password123',
+        password: await bcrypt.hash('password123', 10),
+        isEmployer: true,
+        // role:'jobseeker'
+    },
+
 ]
 
 const seedUsers = await UserModel.insertMany(users)
@@ -62,6 +87,7 @@ const listings = [
         title: 'Senior Accountant', 
         description: 'Hiring senior accountant for our company', 
         company: seedUsers[1]._id, 
+        location: 'NSW',
         education: 'Bachelor of Commerce', 
         experience: '5 years'
     },
@@ -69,6 +95,7 @@ const listings = [
         title: 'Architect', 
         description: 'Hiring architect for our company', 
         company: seedUsers[1]._id, 
+        location: 'QLD',
         education: 'Bachelor of Architecture', 
         experience: '2 years'
     },
@@ -76,8 +103,41 @@ const listings = [
         title: 'Software Engineer', 
         description: 'Hiring software engineer for our company', 
         company: seedUsers[2]._id, 
+        location: 'VIC',
         education: 'Diploma of IT', 
         experience: '3 years'
+    },
+    { 
+        title: 'Programmer', 
+        description: 'Hiring programmer for our company', 
+        company: seedUsers[6]._id, 
+        location: 'NSW',
+        education: 'Diploma of IT', 
+        experience: '2 years'
+    },
+    { 
+        title: 'Store Manager', 
+        description: 'Hiring store manager for our company', 
+        company: seedUsers[4]._id, 
+        location: 'WA',
+        education: 'Diploma of Cooking', 
+        experience: '10 years'
+    },
+    { 
+        title: 'Game Developer', 
+        description: 'Hiring software engineer for our company', 
+        company: seedUsers[5]._id, 
+        location: 'ACT',
+        education: 'Bachelor of Computer Science', 
+        experience: '5 years'
+    },
+    { 
+        title: 'CEO', 
+        description: 'Hiring CEO for our company', 
+        company: seedUsers[6]._id, 
+        location: 'TAS',
+        education: 'Bachelor of Commerce', 
+        experience: '1 years'
     },
 ]
 

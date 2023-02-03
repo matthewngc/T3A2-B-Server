@@ -8,7 +8,7 @@ const router = express.Router()
 router.post('/', authenticate, authorizeEmployer, async (req, res) => {
     try {
         const { title, description, education, experience } = req.body
-        const newJobListing = { title, description, company: req.user.id, education, experience }
+        const newJobListing = { title, description, company: res.locals.user.id, education, experience }
         const insertedListing = await ListingModel.create(newJobListing)
         res.status(201).send(await insertedListing.populate({ path: 'company', select: 'company'}))
     }
@@ -60,7 +60,7 @@ router.delete('/:id', authenticate, authorizeListingOwner, async (req, res) => {
         const listing = await ListingModel.findByIdAndDelete(req.params.id)
         if (listing) {
             // res.send(204).send({ message: 'Job listing deleted successfully!'})
-            res.status(204)
+            res.status(204).send({ message: 'Job listing deleted successfully'})
         // } else {
             // res.sendStatus(404).send({ error: 'Job listing not found!' })
         } else {

@@ -4,11 +4,16 @@ import userRoutes from './routes/user_routes.js'
 import applicationRoutes from './routes/application_routes.js'
 import authRoutes from './routes/auth_routes.js'
 import { dbConnect } from './db.js'
+import cors from 'cors'
+
+
 
 dbConnect()
 
 const app = express()
 const port = 4002
+
+app.use(cors())
 
 app.use(express.json())
 

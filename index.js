@@ -3,7 +3,6 @@ import listingRoutes from './routes/listing_routes.js'
 import userRoutes from './routes/user_routes.js'
 import applicationRoutes from './routes/application_routes.js'
 import authRoutes from './routes/auth_routes.js'
-import jobseekerRoutes from './routes/jobseeker_routes.js'
 import { dbConnect } from './db.js'
 
 dbConnect()
@@ -22,7 +21,5 @@ app.use('/users', userRoutes)
 app.use('/applications', applicationRoutes)
 
 app.use('/auth', authRoutes)
-
-app.use('/jobseeker', jobseekerRoutes)
 
 app.listen(port, () => console.log(`App running at http://localhost:${port}/`))

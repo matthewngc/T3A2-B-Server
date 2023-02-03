@@ -14,6 +14,11 @@ const applicationSchema = new mongoose.Schema({
         type: mongoose.ObjectId,
         ref: 'User'
     },
+    status: {
+        type: String,
+        required: true,
+        default: 'Pending'
+    },
     application_date: { 
         type: Date,
         default: Date.now, 

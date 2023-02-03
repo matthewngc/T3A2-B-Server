@@ -3,28 +3,35 @@ import { ApplicationModel } from './models/application.js'
 import { ListingModel } from './models/listing.js'
 import { UserModel } from './models/user.js'
 
+import bcrypt from 'bcrypt'
+
+// Connect to DB
 dbConnect()
 
+// Drop all existing models from database
 await UserModel.deleteMany()
 console.log('Deleted all users')
 await ListingModel.deleteMany()
 console.log('Deleted all listings')
 await ApplicationModel.deleteMany()
+console.log('Deleted all applications')
 
-
+// Seed users
 
 const users = [
     {
         name: 'John Smith',
         email: 'johnsmith@abc.com',
-        password: 'abc123',
+        debugPW: 'abc123',
+        password: await bcrypt.hash('abc123', 10),
         isEmployer: false,
         // role: 'jobseeker'
     },
     {
         company: 'XYZ Ltd',
         email: 'xyz@xyz.com',
-        password: 'xyz123',
+        debugPW: 'xyz123',
+        password: await bcrypt.hash('xyz123', 10),
         isEmployer: true,
         // role: 'employer'
     },
@@ -32,14 +39,16 @@ const users = [
         name: 'Andrew Smith',
         email: 'andrewsmith@abc.com',
         company: 'ABC Pty Ltd',
-        password: 'password123',
+        debugPW: 'password123',
+        password: await bcrypt.hash('password123', 10),
         isEmployer: true,
         // role: 'employer'
     },
     {
         name: 'James Johnson',
         email: 'jamesjohnson@abc.com',
-        password: 'password123',
+        debugPW: 'password123',
+        password: await bcrypt.hash('password123', 10),
         isEmployer: false,
         // role:'jobseeker'
     }
@@ -78,15 +87,18 @@ console.log('Inserted listings')
 const applications = [
     {
         listing: seedListings[0]._id,
-        applicant: seedUsers[0]._id
+        applicant: seedUsers[0]._id,
+        company: seedUsers[1]._id
     },
     {
         listing: seedListings[2]._id,
-        applicant: seedUsers[3]._id
+        applicant: seedUsers[3]._id,
+        company: seedUsers[2]._id
     },
     {
         listing: seedListings[1]._id,
-        applicant: seedUsers[3]._id
+        applicant: seedUsers[3]._id,
+        company: seedUsers[1]._id
     }
 ]
 

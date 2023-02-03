@@ -2,41 +2,9 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { UserModel } from '../models/user.js'
 import { ListingModel } from '../models/listing.js'
+import { ApplicationModel } from '../models/application.js'
 
 dotenv.config()
-
-// const secret = process.env.JWT_SECRET_KEY
-
-// export function authorize(employer) {
-//     return [
-//         console.log(expressjwt( {secret, algorithms: ['HS256']})),
-//         // expressjwt( {secret, algorithms: ['HS256'] }),
-//         (req, res, next) => {
-//             if (!employer) {
-//                 return res.status(401).send({ error: 'You are not authorized to perform this action' })
-//             }
-        
-//             next()
-//         }
-//     ]
-// }
-
-// const ac = new AccessControl()
-
-// export function authorize() {
-//     ac.grant('jobseeker')
-//         .createOwn('application')
-//         .readOwn('application')
-//         .deleteOwn('application')
-
-//     ac.grant('employer')
-//         .createOwn('listing')
-//         .readAny('listing')
-//         .updateOwn('listing')
-//         .deleteOwn('listing')
-//         .readOwn('application')
-//         .deleteOwn('application')
-// }
 
 export const authenticate = async (req, res, next) => {
     try {
@@ -68,11 +36,13 @@ export const authorizeEmployer = async (req, res, next) => {
 
 export const authorizeListingOwner = async (req, res, next) => {
     try{
-    const listing = await ListingModel.findById(req.params.id).populate({path: 'company', select: 'company'})
+    const listing = await ListingModel.findById(req.params.id)
     if (!listing) {
         return res.status(404).send({ error: 'No listing found under this ID.'})
     }
-    if (listing.company.id != req.user.id) {
+    const ownerID = listing.company._id.valueOf()
+    const userID = res.locals.user._id.valueOf()
+    if (ownerID != userID) {
         return res.status(401).send({ error: 'Only the owner of this listing can perform this action.'})
     } else {
         next()
@@ -82,6 +52,22 @@ export const authorizeListingOwner = async (req, res, next) => {
 }
 }
 
+export const authorizeApplicationOwner = async (req, res, next) => {
+    const application = await ApplicationModel.findById(req.params.id)
+    if (!application) {
+        return res.status(404).send({ error: 'No application found under this ID.'})
+    }
+    const companyID = application.company._id.valueOf()
+    const applicantID = application.applicant._id.valueOf()
+    const userID = res.locals.user._id.valueOf()
+    console.log(companyID != userID && applicantID != userID)
+    if (companyID != userID && applicantID != userID) {
+        return res.status(403).send({ error: 'Only the applicant or the company that posted the listing can perform this action.'})
+    } else {
+        next()
+    }
+}
+
 export const authorizeJobseeker = async (req, res, next) => {
     try {
         if (!res.locals.user.isEmployer) {
@@ -89,8 +75,9 @@ export const authorizeJobseeker = async (req, res, next) => {
         } else {
             return res.status(401).send({ error: 'Only jobseekers can perform this action.'})
         }
-    } catch (err) { error: err.message }
-}
+    } catch (err) { 
+        return res.status(500).send( {error: err.message })
+}}
 
 export const findListingOwner = async (req, res, next) => {
     const { listing } = req.body
@@ -100,3 +87,5 @@ export const findListingOwner = async (req, res, next) => {
     res.locals.company = findListing.company
     next()
 }
+
+

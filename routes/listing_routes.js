@@ -60,7 +60,7 @@ router.delete('/:id', authenticate, authorizeListingOwner, async (req, res) => {
         const listing = await ListingModel.findByIdAndDelete(req.params.id)
         if (listing) {
             // res.send(204).send({ message: 'Job listing deleted successfully!'})
-            res.status(204)
+            res.status(204).send({ message: 'Job listing deleted successfully'})
         // } else {
             // res.sendStatus(404).send({ error: 'Job listing not found!' })
         } else {

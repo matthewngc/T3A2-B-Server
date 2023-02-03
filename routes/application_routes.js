@@ -1,5 +1,5 @@
 import express from 'express'
-import { authenticate, authorizeJobseeker, findListingOwner } from '../middleware/authorization.js'
+import { authenticate, authorizeJobseeker, findListingOwner, authorizeApplicationOwner } from '../middleware/authorization.js'
 import { ApplicationModel } from '../models/application.js'
 
 const router = express.Router()
@@ -43,6 +43,9 @@ router.get('/', async (req, res) => {
 router.get('/dashboard', authenticate, async (req, res) => {
     try {
         console.log(res.locals.user)
+        if (!res.locals.user) {
+            return res.status(403).send({ error: 'Please login' })
+        }
         if (!res.locals.user.isEmployer) {
         res.send(await ApplicationModel
         .find( { applicant: res.locals.user})
@@ -89,17 +92,17 @@ router.get('/:id', async (req, res) => {
 
 
 // DELETE: Delete a job application
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate, authorizeApplicationOwner, async (req, res) => {
     try{
         const application = await ApplicationModel.findByIdAndDelete(req.params.id)
         if (application) {
-            res.status(204)
+            return res.status(204).send({ message: 'Application deleted successfully'})
         } else {
-            res.status(404).send({ error: 'Job listing not found!' })
+            return res.status(404).send({ error: 'Job listing not found!' })
         }
     }
     catch (err) {
-        res.sendStatus(500).send({ error: err.message})
+        return res.status(500).send({ error: err.message})
     }
 })
 

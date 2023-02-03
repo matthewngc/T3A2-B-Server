@@ -22,8 +22,6 @@ export const getJobListingAll = async (req, res) => {
     }
 }
 
-
-
 // Get all job listings posted by the logged in employer
 export const getEmployerDashboard = async (req, res) => {
     try {
@@ -65,7 +63,12 @@ export const updateJobListing = async (req, res) => {
     const newJobListing = { title, description, location, education, experience }
 
     try {
-        const listing = await ListingModel.findByIdAndUpdate(req.params.id, newJobListing, { returnDocument: 'after' }).populate({ path: 'company', select: 'company'})
+        const listing = await ListingModel
+            .findByIdAndUpdate(
+                req.params.id, 
+                newJobListing, 
+                { returnDocument: 'after' })
+                .populate({ path: 'company', select: 'company'})
         if (listing) {
             res.send(listing)
         } else {
@@ -82,12 +85,9 @@ export const deleteJobListing = async (req, res) => {
     try{
         const listing = await ListingModel.findByIdAndDelete(req.params.id)
         if (listing) {
-            // res.send(204).send({ message: 'Job listing deleted successfully!'})
             res.status(204).send({ message: 'Job listing deleted successfully'})
-        // } else {
-            // res.sendStatus(404).send({ error: 'Job listing not found!' })
         } else {
-            res.status(404).send({ error: 'Job listing not found!' }) // not working for some reason - check later
+            res.status(404).send({ error: 'Job listing not found!' })
         }
     }
     catch (err) {

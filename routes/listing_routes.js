@@ -1,5 +1,4 @@
 import express from 'express'
-import { ListingModel } from '../models/listing.js'
 import { authenticate, authorizeEmployer, authorizeListingOwner } from '../middleware/authorization.js'
 import { createJobListing, getJobListingAll, getEmployerDashboard, getJobListingByID, updateJobListing, deleteJobListing } from '../controllers/listing_controller.js'
 

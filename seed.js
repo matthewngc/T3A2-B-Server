@@ -25,7 +25,6 @@ const users = [
         debugPW: 'abc123',
         password: await bcrypt.hash('abc123', 10),
         isEmployer: false,
-        // role: 'jobseeker'
     },
     {
         company: 'XYZ Ltd',
@@ -33,7 +32,6 @@ const users = [
         debugPW: 'xyz123',
         password: await bcrypt.hash('xyz123', 10),
         isEmployer: true,
-        // role: 'employer'
     },
     {
         name: 'Andrew Smith',
@@ -42,7 +40,6 @@ const users = [
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
         isEmployer: true,
-        // role: 'employer'
     },
     {
         name: 'James Johnson',
@@ -50,15 +47,13 @@ const users = [
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
         isEmployer: false,
-        // role:'jobseeker'
     },
     {
         company: 'McDonalds',
         email: 'mcdonalds@abc.com',
         debugPW: 'maccas123',
-        password: await bcrypt.hash('password123', 10),
+        password: await bcrypt.hash('maccas123', 10),
         isEmployer: true,
-        // role:'jobseeker'
     },
     {
         company: 'Riot Games',
@@ -66,7 +61,6 @@ const users = [
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
         isEmployer: true,
-        // role:'jobseeker'
     },
     {
         company: 'Amazon',
@@ -74,7 +68,6 @@ const users = [
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
         isEmployer: true,
-        // role:'jobseeker'
     },
 
 ]

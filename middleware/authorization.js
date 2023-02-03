@@ -47,7 +47,8 @@ export const authenticate = async (req, res, next) => {
         if (authHeader.startsWith('Bearer ')) {
             const accessToken = authHeader.substring(6).trim()
             const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET_KEY)
-            req.user = verifiedToken
+            res.locals.user = await UserModel.findById(verifiedToken.id)
+            // req.user = verifiedToken
             // console.log(req.user)
             next()
         }
@@ -57,9 +58,8 @@ export const authenticate = async (req, res, next) => {
 }
 
 export const authorizeEmployer = async (req, res, next) => {
-    const user = await UserModel.findById(req.user.id)
     // console.log(user)
-    if (user.isEmployer) {
+    if (res.locals.user.isEmployer) {
         next()
     } else {
         return res.status(401).send({ error: 'Only employers can perform this action.'})
@@ -80,4 +80,23 @@ export const authorizeListingOwner = async (req, res, next) => {
 }   catch (err) {
     return res.status(500).send({ error: err.message })
 }
+}
+
+export const authorizeJobseeker = async (req, res, next) => {
+    try {
+        if (!res.locals.user.isEmployer) {
+            next()
+        } else {
+            return res.status(401).send({ error: 'Only jobseekers can perform this action.'})
+        }
+    } catch (err) { error: err.message }
+}
+
+export const findListingOwner = async (req, res, next) => {
+    const { listing } = req.body
+    const findListing = await ListingModel.findById(listing)
+    console.log(listing)
+    console.log(findListing)
+    res.locals.company = findListing.company
+    next()
 }

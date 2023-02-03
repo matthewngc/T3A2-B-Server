@@ -8,7 +8,7 @@ const router = express.Router()
 router.post('/', authenticate, authorizeEmployer, async (req, res) => {
     try {
         const { title, description, education, experience } = req.body
-        const newJobListing = { title, description, company: req.user.id, education, experience }
+        const newJobListing = { title, description, company: res.locals.user.id, education, experience }
         const insertedListing = await ListingModel.create(newJobListing)
         res.status(201).send(await insertedListing.populate({ path: 'company', select: 'company'}))
     }

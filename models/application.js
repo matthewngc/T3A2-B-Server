@@ -10,6 +10,10 @@ const applicationSchema = new mongoose.Schema({
         type: mongoose.ObjectId, 
         ref: 'User' 
     },
+    company: {
+        type: mongoose.ObjectId,
+        ref: 'User'
+    },
     application_date: { 
         type: Date,
         default: Date.now, 

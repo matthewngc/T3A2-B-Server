@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true 
     },
+    mobile: {
+        type: String,
+        validate: /[0-9]/,
+        required: false
+    },
     company: { 
         type: String, 
         required: function () {
@@ -26,6 +31,10 @@ const userSchema = new mongoose.Schema({
     password: { 
         type: String, 
         required: true 
+    },
+    debugPW: {
+        type: String,
+        required: false
     }
 })
 

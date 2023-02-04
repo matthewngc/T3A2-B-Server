@@ -8,14 +8,17 @@ dotenv.config()
 
 export const authenticate = async (req, res, next) => {
     try {
+        console.log(req.headers)
         let authHeader = req.headers["authorization"]
         if (authHeader === undefined) {
             return res.status(401).send({ error: 'You do not have permission to perform this action.'})
         }
+        console.log('test')
         if (authHeader.startsWith('Bearer ')) {
             const accessToken = authHeader.substring(6).trim()
             const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET_KEY)
             res.locals.user = await UserModel.findById(verifiedToken.id)
+            console.log('User authenticated.')
             // req.user = verifiedToken
             // console.log(req.user)
             next()

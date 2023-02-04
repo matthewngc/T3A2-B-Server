@@ -21,7 +21,6 @@ router.get('/dashboard',
     authenticate, 
     getApplicationsDashboard)
 
-
 // READ: Get one application
 router.get('/:id', 
     getApplicationByID)

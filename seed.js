@@ -22,6 +22,7 @@ const users = [
     {
         name: 'John Smith',
         email: 'johnsmith@abc.com',
+        mobile: '0423 123 123',
         debugPW: 'abc123',
         password: await bcrypt.hash('abc123', 10),
         isEmployer: false,
@@ -29,6 +30,7 @@ const users = [
     {
         company: 'XYZ Ltd',
         email: 'xyz@xyz.com',
+        mobile: '0414 414 414',
         debugPW: 'xyz123',
         password: await bcrypt.hash('xyz123', 10),
         isEmployer: true,
@@ -36,6 +38,7 @@ const users = [
     {
         name: 'Andrew Smith',
         email: 'andrewsmith@abc.com',
+        mobile: '0444 444 444',
         company: 'ABC Pty Ltd',
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
@@ -44,6 +47,7 @@ const users = [
     {
         name: 'James Johnson',
         email: 'jamesjohnson@abc.com',
+        mobile: '0481 111 111',
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
         isEmployer: false,
@@ -51,6 +55,7 @@ const users = [
     {
         company: 'McDonalds',
         email: 'mcdonalds@abc.com',
+        mobile: '0404 040 404',
         debugPW: 'maccas123',
         password: await bcrypt.hash('maccas123', 10),
         isEmployer: true,
@@ -58,6 +63,7 @@ const users = [
     {
         company: 'Riot Games',
         email: 'riot@abc.com',
+        mobile: '02 9999 9999',
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
         isEmployer: true,
@@ -65,6 +71,7 @@ const users = [
     {
         company: 'Amazon',
         email: 'amazon@abc.com',
+        mobile: '03 8888 8888',
         debugPW: 'password123',
         password: await bcrypt.hash('password123', 10),
         isEmployer: true,
@@ -152,6 +159,21 @@ const applications = [
         listing: seedListings[1]._id,
         applicant: seedUsers[3]._id,
         company: seedUsers[1]._id
+    },
+    {
+        listing: seedListings[2]._id,
+        applicant: seedUsers[0]._id,
+        company: seedUsers[2]._id,
+    },
+    {
+        listing: seedListings[4]._id,
+        applicant: seedUsers[0]._id,
+        company: seedUsers[6]._id,
+    },
+    {
+        listing: seedListings[6]._id,
+        applicant: seedUsers[0]._id,
+        company: seedUsers[5]._id,
     }
 ]
 

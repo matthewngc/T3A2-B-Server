@@ -79,6 +79,8 @@ router.post('/login', async (req, res) => {
             return res.status(201).send({
                 id: user.id,
                 name: user.name,
+                mobile: user.mobile,
+                company: user.company,
                 email: user.email,
                 token: newToken,
                 isEmployer: user.isEmployer            

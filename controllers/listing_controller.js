@@ -1,5 +1,18 @@
 import { ListingModel } from "../models/listing.js"
 
+// Find the owner of the listing
+export const findListingOwner = async (req, res, next) => {
+    const { listing } = req.body
+    const findListing = await ListingModel.findById(listing)
+    console.log(listing)
+    console.log(findListing)
+    if (!findListing) {
+        return res.status(404).send({ error: 'Listing not found'})
+    }
+    res.locals.company = findListing.company
+    next()
+}
+
 // Create job listing
 export const createJobListing = async (req, res) => {
     try {

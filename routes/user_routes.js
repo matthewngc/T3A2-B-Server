@@ -1,10 +1,9 @@
-import { UserModel } from '../models/user.js'
 import express from 'express'
 import { createUser, getAllUsers, getOneUserByID, updateUser, deleteUser } from '../controllers/user_controller.js'
 
 const router = express.Router()
 
-
+// FOR ADMIN USE OR DEBUG PURPOSES
 // Create user
 router.post('/', 
     createUser)

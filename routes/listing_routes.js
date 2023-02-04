@@ -4,7 +4,7 @@ import { createJobListing, getJobListingAll, getEmployerDashboard, getJobListing
 
 const router = express.Router()
 
-// CREATE: Post job listing
+// CREATE: Post job listing - only employers can post job listings
 router.post('/', 
     authenticate, 
     authorizeEmployer, 
@@ -23,13 +23,13 @@ router.get('/dashboard',
 router.get('/:id', 
     getJobListingByID)
 
-// UPDATE: update job listing
+// UPDATE: update job listing - only the employer who posted the listing can update the listing
 router.put('/:id', 
     authenticate, 
     authorizeListingOwner, 
     updateJobListing)
 
-// DELETE: delete job listing
+// DELETE: delete job listing - only the employer who posted the listing can delete the listing
 router.delete('/:id', 
     authenticate, 
     authorizeListingOwner, 

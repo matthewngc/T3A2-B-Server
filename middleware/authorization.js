@@ -6,6 +6,7 @@ import { ApplicationModel } from '../models/application.js'
 
 dotenv.config()
 
+// Authenticate user by verifying token
 export const authenticate = async (req, res, next) => {
     try {
         console.log(req.headers)
@@ -19,8 +20,6 @@ export const authenticate = async (req, res, next) => {
             const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET_KEY)
             res.locals.user = await UserModel.findById(verifiedToken.id)
             console.log('User authenticated.')
-            // req.user = verifiedToken
-            // console.log(req.user)
             next()
         }
     } catch (err) {
@@ -28,6 +27,7 @@ export const authenticate = async (req, res, next) => {
     }
 }
 
+// Check that the logged in user is an employer and authorize
 export const authorizeEmployer = async (req, res, next) => {
     // console.log(user)
     if (res.locals.user.isEmployer) {
@@ -37,6 +37,19 @@ export const authorizeEmployer = async (req, res, next) => {
     }
 }
 
+// Check that the logged in user is a jobseeker and authorize
+export const authorizeJobseeker = async (req, res, next) => {
+    try {
+        if (!res.locals.user.isEmployer) {
+            next()
+        } else {
+            return res.status(401).send({ error: 'Only jobseekers can perform this action.'})
+        }
+    } catch (err) { 
+        return res.status(500).send( {error: err.message })
+}}
+
+// Check that the logged in user is the owner of the listing and authorize
 export const authorizeListingOwner = async (req, res, next) => {
     try{
     const listing = await ListingModel.findById(req.params.id)
@@ -55,6 +68,7 @@ export const authorizeListingOwner = async (req, res, next) => {
 }
 }
 
+// Check that the logged in user is the owner of the application and authorize
 export const authorizeApplicationOwner = async (req, res, next) => {
     const application = await ApplicationModel.findById(req.params.id)
     if (!application) {
@@ -71,6 +85,7 @@ export const authorizeApplicationOwner = async (req, res, next) => {
     }
 }
 
+// Check that the logged in user is the owner of the listing that the application relates to, and authorize
 export const authorizeApplicationReviewer = async (req, res, next) => {
     const application = await ApplicationModel.findById(req.params.id)
     if (!application) {
@@ -85,27 +100,8 @@ export const authorizeApplicationReviewer = async (req, res, next) => {
     }
 }
 
-export const authorizeJobseeker = async (req, res, next) => {
-    try {
-        if (!res.locals.user.isEmployer) {
-            next()
-        } else {
-            return res.status(401).send({ error: 'Only jobseekers can perform this action.'})
-        }
-    } catch (err) { 
-        return res.status(500).send( {error: err.message })
-}}
 
-export const findListingOwner = async (req, res, next) => {
-    const { listing } = req.body
-    const findListing = await ListingModel.findById(listing)
-    console.log(listing)
-    console.log(findListing)
-    if (!findListing) {
-        return res.status(404).send({ error: 'Listing not found'})
-    }
-    res.locals.company = findListing.company
-    next()
-}
+
+
 
 

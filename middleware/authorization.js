@@ -29,11 +29,15 @@ export const authenticate = async (req, res, next) => {
 
 // Check that the logged in user is an employer and authorize
 export const authorizeEmployer = async (req, res, next) => {
-    // console.log(user)
-    if (res.locals.user.isEmployer) {
-        next()
-    } else {
-        return res.status(401).send({ error: 'Only employers can perform this action.'})
+    try {
+        // console.log(user)
+        if (res.locals.user.isEmployer) {
+            next()
+        } else {
+            return res.status(401).send({ error: 'Only employers can perform this action.'})
+        }
+    } catch (err) {
+        return res.status(500).send({ error: err.message })
     }
 }
 
@@ -47,56 +51,65 @@ export const authorizeJobseeker = async (req, res, next) => {
         }
     } catch (err) { 
         return res.status(500).send( {error: err.message })
-}}
+    }
+}
 
 // Check that the logged in user is the owner of the listing and authorize
 export const authorizeListingOwner = async (req, res, next) => {
     try{
-    const listing = await ListingModel.findById(req.params.id)
-    if (!listing) {
-        return res.status(404).send({ error: 'No listing found under this ID.'})
+        const listing = await ListingModel.findById(req.params.id)
+        if (!listing) {
+            return res.status(404).send({ error: 'No listing found under this ID.'})
+        }
+        const ownerID = listing.company._id.valueOf()
+        const userID = res.locals.user._id.valueOf()
+        if (ownerID != userID) {
+            return res.status(401).send({ error: 'Only the owner of this listing can perform this action.'})
+        } else {
+            next()
+        }
+    } catch (err) {
+        return res.status(500).send({ error: err.message })
     }
-    const ownerID = listing.company._id.valueOf()
-    const userID = res.locals.user._id.valueOf()
-    if (ownerID != userID) {
-        return res.status(401).send({ error: 'Only the owner of this listing can perform this action.'})
-    } else {
-        next()
-    }
-}   catch (err) {
-    return res.status(500).send({ error: err.message })
-}
 }
 
 // Check that the logged in user is the owner of the application and authorize
 export const authorizeApplicationOwner = async (req, res, next) => {
-    const application = await ApplicationModel.findById(req.params.id)
-    if (!application) {
-        return res.status(404).send({ error: 'No application found under this ID.'})
-    }
-    const companyID = application.company._id.valueOf()
-    const applicantID = application.applicant._id.valueOf()
-    const userID = res.locals.user._id.valueOf()
-    console.log(companyID != userID && applicantID != userID)
-    if (companyID != userID && applicantID != userID) {
-        return res.status(403).send({ error: 'Only the applicant or the company that posted the listing can perform this action.'})
-    } else {
-        next()
+    try {
+        const application = await ApplicationModel.findById(req.params.id)
+        if (!application) {
+            return res.status(404).send({ error: 'No application found under this ID.'})
+        }
+        const companyID = application.company._id.valueOf()
+        const applicantID = application.applicant._id.valueOf()
+        const userID = res.locals.user._id.valueOf()
+        console.log(companyID != userID && applicantID != userID)
+        if (companyID != userID && applicantID != userID) {
+            return res.status(403).send({ error: 'Only the applicant or the company that posted the listing can perform this action.'})
+        } else {
+            next()
+        }
+    } catch (err) {
+        return res.status(500).send({ error: err.message })
     }
 }
 
 // Check that the logged in user is the owner of the listing that the application relates to, and authorize
 export const authorizeApplicationReviewer = async (req, res, next) => {
-    const application = await ApplicationModel.findById(req.params.id)
-    if (!application) {
-        return res.status(404).send({ error: 'No application found under this ID.'})
-    }
-    const companyID = application.company._id.valueOf()
-    const userID = res.locals.user._id.valueOf()
-    if (companyID != userID) {
-        return res.status(403).send({ error: 'Only the company that posted the listing can perform this action.' })
-    } else {
-        next()
+    try {
+        const application = await ApplicationModel.findById(req.params.id)
+        if (!application) {
+            return res.status(404).send({ error: 'No application found under this ID.'})
+        }
+        const companyID = application.company._id.valueOf()
+        const userID = res.locals.user._id.valueOf()
+        if (companyID != userID) {
+            return res.status(403).send({ error: 'Only the company that posted the listing can perform this action.' })
+        } else {
+            next()
+        }
+    } catch (err) {
+        return res.status(500).send({ error: err.message })
     }
 }
 

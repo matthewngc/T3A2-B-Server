@@ -101,6 +101,9 @@ export const findListingOwner = async (req, res, next) => {
     const findListing = await ListingModel.findById(listing)
     console.log(listing)
     console.log(findListing)
+    if (!findListing) {
+        return res.status(404).send({ error: 'Listing not found'})
+    }
     res.locals.company = findListing.company
     next()
 }

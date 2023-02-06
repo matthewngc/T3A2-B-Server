@@ -113,6 +113,18 @@ describe('Login, Create and Edit listing', () => {
 
 describe('Login, Create and Delete Application', () => {
 
+    // const testListing = {
+    //     id: 'test id',
+    //     title: 'Application Tester',
+    //     description: 'Application test',
+    //     company: 'Testco',
+    //     location: 'NSW',
+    //     education: 'Bachelor of Testing',
+    //     experience: '5 years'
+    // }
+
+    // })
+
     test('Register as jobseeker, login, create and delete application', async () => {
 
         await request(app).post('/auth/register')
@@ -120,7 +132,7 @@ describe('Login, Create and Delete Application', () => {
             email: 'matthew@ng.com',
             password: 'matthew123',
             name: 'Matthew Ng',
-            isEmployer: false
+            isEmployer: true
         })
 
         const resLogin = await request(app).post('/auth/login')
@@ -148,20 +160,35 @@ describe('Login, Create and Delete Application', () => {
             
         .set('authorization', 'Bearer ' + resLogin.body.token)
 
+        await request(app).post('/auth/register')
+        .send({
+            email: 'matt@ng.com',
+            password: 'matt123',
+            name: 'Matt Ng',
+            isEmployer: false
+        })
+
+        const resJobLogin = await request(app).post('/auth/login')
+        .send({
+            email: 'matt@ng.com',
+            password: 'matt123',
+        })
+
+        
         const resApplication = await request(app).post('/applications/')
         .send({
             listing: resListing.body._id,
             // company: resListing.body.company
         })
-
+        
         .set('authorization', 'Bearer ' + resLogin.body.token)
 
         expect(resApplication.status).toBe(201)
-        // expect(resApplication.headers['content-type']).toMatch(/json/i)
-        // expect(resApplication.body).toBeDefined()
-        // expect(resApplication.body).toHaveProperty('_id')
-        // expect(resApplication.body.listing).toBe(resListing.body._id)
-        // // expect(resApplication.body.company).toBe(resListing.body.company)
+        expect(resApplication.headers['content-type']).toMatch(/json/i)
+        expect(resApplication.body).toBeDefined()
+        expect(resApplication.body).toHaveProperty('_id')
+        expect(resApplication.body.listing).toBe(resListing.body._id)
+        expect(resApplication.body.company).toBe(resListing.body.company)
 
 
     })

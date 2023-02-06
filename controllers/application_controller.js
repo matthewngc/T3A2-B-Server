@@ -7,6 +7,7 @@ export const createApplication = async (req, res) => {
         const newJobApplication = { 
             listing, 
             applicant: res.locals.user,
+            // title:
             company: res.locals.company }
         const insertedApplication = await ApplicationModel.create(newJobApplication)
         return res.status(201).send(await insertedApplication

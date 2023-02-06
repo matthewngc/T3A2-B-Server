@@ -96,8 +96,9 @@ export const updateJobListing = async (req, res) => {
 // Delete job listing
 export const deleteJobListing = async (req, res) => {
     try{
-        const listing = await ListingModel.findByIdAndDelete(req.params.id)
+        const listing = await ListingModel.findById(req.params.id)
         if (listing) {
+            listing.remove()
             res.status(204).send({ message: 'Job listing deleted successfully'})
         } else {
             res.status(404).send({ error: 'Job listing not found!' })

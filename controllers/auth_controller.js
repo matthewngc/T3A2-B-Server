@@ -9,7 +9,7 @@ dotenv.config()
 // Register new user
 export const registerUser = async (req, res) => {
     try {
-        const { email, password, name, mobile, company, isEmployer } = req.body
+        const { email, password, name, company, isEmployer } = req.body
         if (!(email && password) || isEmployer && !company || !isEmployer && !name) {
             return res.status(400).send({ error: 'Please enter all required fields.' })
         }
@@ -31,7 +31,6 @@ export const registerUser = async (req, res) => {
             id: newUser.id,
             name: newUser.name,
             company: newUser.company,
-            mobile: newUser.mobile,
             email: newUser.email,
             isEmployer: newUser.isEmployer,
             token: newToken
@@ -55,7 +54,6 @@ export const loginUser = async (req, res) => {
             return res.status(201).send({
                 id: user.id,
                 name: user.name,
-                mobile: user.mobile,
                 company: user.company,
                 email: user.email,
                 token: newToken,

@@ -17,11 +17,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true 
     },
-    mobile: {
-        type: String,
-        validate: /[0-9]/,
-        required: false
-    },
     company: { 
         type: String, 
         required: function () {
